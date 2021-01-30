@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      <? var colors = getColors(); ?>
+      :root{
+        --input-text-color: <?= colors[0][0] ?>;
+        --input-unfilled-color:<?= colors[1][0] ?>;
+        --input-selected-color:<?= colors[2][0] ?>;
+        --input-done-color:<?= colors[3][0] ?>;
+        --button-text-color:<?= colors[4][0] ?>;
+        --button-color:<?= colors[5][0] ?>;
+        --loading-color: <?= colors[6][0]; ?>;
+      }
+      :root::-webkit-scrollbar{
+        display:none;
+      }
+      .container {
+          padding: 16px;
+          text-align: left;
+          color: var(--input-text-color);
+      }
+      input {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #bbb;
+          box-sizing: border-box;
+          border-radius: 10px;
+          background: --var(--input-done-color);
+      }
+      input:placeholder-shown{
+        background: var(--input-unfilled-color);
+      }
+      input:focus{
+        background: var(--input-selected-color);
+        border-radius: 10px;
+      }
+      select {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #bbb;
+          box-sizing: border-box;
+      }
+    </style>
+
+    <style>
+      .center {
+          text-align: center;
+          width: 100%;
+          display: inline-block;
+          box-sizing: border-box;
+      }
+    </style>
+    <style>
+      #error {
+          color: red;
+      }
+   </style>
+    <style>
+      .red {
+          color: red;
+      }
+    </style>
+    <style>
+      #submitBtn{
+        color: var(--button-text-color);
+        background: var(--button-color);
+        font-size: 25px;
+        border-radius:100px;
+      }
+    </style>
+    <style>
+      .lds-spinner {
+        color: official;
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-spinner div {
+        transform-origin: 40px 40px;
+        animation: lds-spinner 1.2s linear infinite;
+      }
+      .lds-spinner div:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 3px;
+        left: 37px;
+        width: 6px;
+        height: 18px;
+        border-radius: 20%;
+        background: var(--loading-color);
+      }
+      .lds-spinner div:nth-child(1) {
+        transform: rotate(0deg);
+        animation-delay: -1.1s;
+      }
+      .lds-spinner div:nth-child(2) {
+        transform: rotate(30deg);
+        animation-delay: -1s;
+      }
+      .lds-spinner div:nth-child(3) {
+        transform: rotate(60deg);
+        animation-delay: -0.9s;
+      }
+      .lds-spinner div:nth-child(4) {
+        transform: rotate(90deg);
+        animation-delay: -0.8s;
+      }
+      .lds-spinner div:nth-child(5) {
+        transform: rotate(120deg);
+        animation-delay: -0.7s;
+      }
+      .lds-spinner div:nth-child(6) {
+        transform: rotate(150deg);
+        animation-delay: -0.6s;
+      }
+      .lds-spinner div:nth-child(7) {
+        transform: rotate(180deg);
+        animation-delay: -0.5s;
+      }
+      .lds-spinner div:nth-child(8) {
+        transform: rotate(210deg);
+        animation-delay: -0.4s;
+      }
+      .lds-spinner div:nth-child(9) {
+        transform: rotate(240deg);
+        animation-delay: -0.3s;
+      }
+      .lds-spinner div:nth-child(10) {
+        transform: rotate(270deg);
+        animation-delay: -0.2s;
+      }
+      .lds-spinner div:nth-child(11) {
+        transform: rotate(300deg);
+        animation-delay: -0.1s;
+      }
+      .lds-spinner div:nth-child(12) {
+        transform: rotate(330deg);
+        animation-delay: 0s;
+      }
+      @keyframes lds-spinner {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+ 
+  <body>
+    <form>
+        <div class="container">
+            <? var preDate = getDate(); ?>
+            
+            <table>
+            <tr>
+              <label for="date"><b>Date:</b></label>
+              <input type="date" name="date" placeholder="Date" id="date" value = "<?=preDate?>"required>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <label for="shift"><b>Shift:</b></label>
+                <!--<input type="text" name="shift" placeholder="Shift" id="shift" required>-->
+                <select name="shift" required>
+                  <option value="" selected disabled hidden>Select Shift..</option>
+                  <? var shifts = getShifts() ?>
+                  <? for(var i=0;i<shifts.length;i++){ ?>
+                       <option value="<?= shifts[i] ?>"><?= shifts[i] ?></option>
+                  <? } ?>
+                </select>
+              </td>
+              <td colspan="2">
+              <label for="shifttype"><b>Start vs End:</b></label>
+              <select name="shifttype">
+                <option value="beginning">Beginning of Shift</option>
+                <option value="end">End of Shift</option>
+              </select>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <label for="snum"><b>S#:</b></label>
+                <input type="text" name="snum" placeholder="S#" id="snum" required>
+              </td>
+              <td colspan="2">
+                <label for="name"><b>Name:</b></label>
+                <input type="text" name="name" placeholder="Name" id="name" required>
+              </td>
+            </tr>
+            
+            <? var data = getData(); ?>
+            <? for(var i=0;i<data.length;i++){ ?>
+                <? if(i%4==0) {?>
+                  <tr>
+                <?}?>
+                  <td>
+                    <label for="<?= data[i][0] ?>"><b><?= data[i][1] ?>:</b></label>
+                    <input type="number" name="<?= data[i][0] ?>" placeholder="<?= data[i][1] ?>" id="<?= data[i][0] ?>" pattern="[0,9]+" min="0" max="99" required>
+                  </td>
+                <? if(i%4==3){?>
+                  </tr>
+                <?}?>
+            <? } ?>
+            </table>
+            <label for="other"><b>Other:</b></label>
+            <input type="text" name="other" placeholder="Other" id="other" required>
+            <input type="submit" value="Submit" id="submitBtn">
+            <div class="center">
+               <p class="red" hidden><b>submitting...please wait</b></p>
+               <div class="lds-spinner red">
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                 <div class="red" hidden></div>
+                </div>
+               <h2 id="error" ></h2>
+            </div>
+        </div>
+        
+    </form>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    <script>
+
+        $(document).ready(function(){
+
+              $('form').submit(function(e){
+                e.preventDefault();
+                $("#error").attr("hidden",true);
+                $('#submitBtn').attr("disabled", true);
+                $('.red').attr("hidden",false);
+                var form = $('form').serializeArray();
+                var obj = {formObject:form,resub:false}
+                google.script.run.withSuccessHandler(closeIt).withFailureHandler(onFailure).processFormResponse(obj);
+                
+              });
+
+
+        });
+        function onFailure(e){
+        
+           var regerror ="ERROR: Shift has already been submitted.\nPress OK to overwrite previous log.\nPress cancel to go back.";
+           var r = confirm(e.message);
+           if(r){
+             var p = prompt("Are you sure?\nThis will overwrite current saved log.\nType 'Yes' into the box to confirm.");
+             if(p == "Yes" || p=="yes"){
+                $('#submitBtn').attr("disabled", true);
+                $('.red').attr("hidden",false);
+                $('#error').attr("hidden",true);
+                var form = $('form').serializeArray() 
+                var obj = {formObject:form}
+                google.script.run.withSuccessHandler(closeIt).resubmit(obj);
+             }
+             else{
+                $('#submitBtn').attr("disabled", false);
+                $('.red').attr("hidden",true);
+
+                if(e.message == regerror){
+                   $("#error").text("ERROR: Shift has already been submitted.");
+                }
+                else{
+                   $("#error").text(e.message);
+                }
+                $("#error").attr("hidden",false);
+             }
+           }
+           else{
+                $('#submitBtn').attr("disabled", false);
+                $('.red').attr("hidden",true);
+                if(e.message == regerror){
+                   $("#error").text("ERROR: Shift has already been submitted.");
+                }
+                else{
+                   $("#error").text(e.message);
+                }
+                $("#error").attr("hidden",false);
+             }
+        }
+        function closeIt(){
+           google.script.host.close()
+        };
+
+       </script>
+  </body>
+</html>
+
+
